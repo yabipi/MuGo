@@ -51,8 +51,8 @@ class PolicyNetwork(object):
     def set_up_network(self):
         # a global_step variable allows epoch counts to persist through multiple training sessions
         global_step = tf.Variable(0, name="global_step", trainable=False)
-        x = tf.placeholder(tf.float32, [None, go.N, go.N, self.num_input_planes])
-        y = tf.placeholder(tf.float32, shape=[None, go.N ** 2])
+        x = tf.compat.v1.placeholder(tf.float32, [None, go.N, go.N, self.num_input_planes])
+        y = tf.compat.v1.placeholder(tf.float32, shape=[None, go.N ** 2])
 
         #convenience functions for initializing weights and biases
         def _weight_variable(shape, name):
@@ -93,12 +93,12 @@ class PolicyNetwork(object):
         was_correct = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(was_correct, tf.float32))
 
-        weight_summaries = tf.summary.merge([
+        weight_summaries = tf.compat.v1.summary.merge([
             tf.summary.histogram(weight_var.name, weight_var)
             for weight_var in [W_conv_init] +  W_conv_intermediate + [W_conv_final, b_conv_final]],
             name="weight_summaries"
         )
-        activation_summaries = tf.summary.merge([
+        activation_summaries = tf.compat.v1.summary.merge([
             tf.summary.histogram(act_var.name, act_var)
             for act_var in [h_conv_init] + h_conv_intermediate + [h_conv_final]],
             name="activation_summaries"
@@ -183,11 +183,11 @@ class StatisticsCollector(object):
     '''
     graph = tf.Graph()
     with tf.device("/cpu:0"), graph.as_default():
-        accuracy = tf.placeholder(tf.float32, [])
-        cost = tf.placeholder(tf.float32, [])
+        accuracy = tf.compat.v1.placeholder(tf.float32, [])
+        cost = tf.compat.v1.placeholder(tf.float32, [])
         accuracy_summary = tf.summary.scalar("accuracy", accuracy)
         cost_summary = tf.summary.scalar("log_likelihood_cost", cost)
-        accuracy_summaries = tf.summary.merge([accuracy_summary, cost_summary], name="accuracy_summaries")
+        accuracy_summaries = tf.compat.v1.summary.merge([accuracy_summary, cost_summary], name="accuracy_summaries")
     session = tf.Session(graph=graph)
 
     def __init__(self):
