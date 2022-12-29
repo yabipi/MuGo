@@ -1,6 +1,6 @@
 lib
 bin
-data
 processed_data
 .pyc
 __pycache__
+.DS_Store
