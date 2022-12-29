@@ -3,7 +3,7 @@ numpy
 pygtp>=0.4
 setuptools>=41.0.0
 sgf==0.5
-tensorflow<2
+tensorflow
 protobuf>=3.6,<3.7
 six==1.10.0
 tqdm
