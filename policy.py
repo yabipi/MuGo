@@ -41,7 +41,7 @@ class PolicyNetwork(object):
         self.training_summary_writer = None
         self.test_stats = StatisticsCollector()
         self.training_stats = StatisticsCollector()
-        self.session = tf.Session()
+        self.session = tf.compat.v1.Session()
         if use_cpu:
             with tf.device("/cpu:0"):
                 self.set_up_network()
@@ -187,8 +187,9 @@ class StatisticsCollector(object):
         cost = tf.compat.v1.placeholder(tf.float32, [])
         accuracy_summary = tf.summary.scalar("accuracy", accuracy)
         cost_summary = tf.summary.scalar("log_likelihood_cost", cost)
+        # by jgku
         accuracy_summaries = tf.compat.v1.summary.merge([accuracy_summary, cost_summary], name="accuracy_summaries")
-    session = tf.Session(graph=graph)
+    session = tf.compat.v1.Session(graph=graph)
 
     def __init__(self):
         self.accuracies = []

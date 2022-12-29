@@ -10,6 +10,8 @@ import go
 from sgf_wrapper import replay_sgf
 import utils
 
+from tqdm import tqdm
+
 # Number of data points to store in a chunk on disk
 CHUNK_SIZE = 4096
 CHUNK_HEADER_FORMAT = "iii?"
@@ -38,9 +40,13 @@ def find_sgf_files(*dataset_dirs):
     for dataset_dir in dataset_dirs:
         full_dir = os.path.join(os.getcwd(), dataset_dir)
         dataset_files = [os.path.join(full_dir, name) for name in os.listdir(full_dir)]
+
         for f in dataset_files:
-            if os.path.isfile(f) and f.endswith(".sgf"):
-                yield f
+            if os.path.isdir(f) == False: continue
+            sgffiles = os.listdir(f)
+            for sgf in sgffiles:
+                if os.path.isfile(sgf) and sgf.endswith(".sgf"):
+                    yield sgf
 
 def get_positions_from_sgf(file):
     with open(file) as f:
@@ -52,7 +58,7 @@ def split_test_training(positions_w_context, est_num_positions):
     desired_test_size = 10**5
     if est_num_positions < 2 * desired_test_size:
         print("Not enough data to have a full test set. Splitting 67:33")
-        positions_w_context = list(tqdm.tqdm(positions_w_context))
+        positions_w_context = list(tqdm(positions_w_context))
         test_size = len(positions_w_context) // 3
         return positions_w_context[:test_size], [positions_w_context[test_size:]]
     else:
