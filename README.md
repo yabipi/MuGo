@@ -1,3 +1,7 @@
+安装
+======
+> python3 -m pip install tensorflow-macos
+
 Update
 ======
 
