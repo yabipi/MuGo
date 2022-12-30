@@ -61,7 +61,7 @@ class PolicyNetwork(object):
             number_inputs_added = utils.product(shape[:-1])
             stddev = 1 / math.sqrt(number_inputs_added)
             # http://neuralnetworksanddeeplearning.com/chap3.html#weight_initialization
-            return tf.Variable(tf.truncated_normal(shape, stddev=stddev), name=name)
+            return tf.Variable(tf.compat.v1.random.truncated_normal(shape, stddev=stddev), name=name)
 
         def _conv2d(x, W):
             return tf.nn.conv2d(x, W, strides=[1,1,1,1], padding="SAME")
@@ -89,21 +89,21 @@ class PolicyNetwork(object):
 
         log_likelihood_cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=y))
 
-        train_step = tf.train.AdamOptimizer(1e-4).minimize(log_likelihood_cost, global_step=global_step)
+        train_step = tf.compat.v1.train.AdamOptimizer(1e-4).minimize(log_likelihood_cost, global_step=global_step)
         was_correct = tf.equal(tf.argmax(logits, 1), tf.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(was_correct, tf.float32))
 
-        weight_summaries = tf.compat.v1.summary.merge([
-            tf.summary.histogram(weight_var.name, weight_var)
-            for weight_var in [W_conv_init] +  W_conv_intermediate + [W_conv_final, b_conv_final]],
-            name="weight_summaries"
-        )
-        activation_summaries = tf.compat.v1.summary.merge([
-            tf.summary.histogram(act_var.name, act_var)
-            for act_var in [h_conv_init] + h_conv_intermediate + [h_conv_final]],
-            name="activation_summaries"
-        )
-        saver = tf.train.Saver()
+        # weight_summaries = tf.compat.v1.summary.merge([
+        #     tf.summary.histogram(weight_var.name, weight_var)
+        #     for weight_var in [W_conv_init] +  W_conv_intermediate + [W_conv_final, b_conv_final]],
+        #     name="weight_summaries"
+        # )
+        # activation_summaries = tf.compat.v1.summary.merge([
+        #     tf.summary.histogram(act_var.name, act_var)
+        #     for act_var in [h_conv_init] + h_conv_intermediate + [h_conv_final]],
+        #     name="activation_summaries"
+        # )
+        saver = tf.compat.v1.train.Saver()
 
         # save everything to self.
         for name, thing in locals().items():
@@ -111,11 +111,11 @@ class PolicyNetwork(object):
                 setattr(self, name, thing)
 
     def initialize_logging(self, tensorboard_logdir):
-        self.test_summary_writer = tf.summary.FileWriter(os.path.join(tensorboard_logdir, "test"), self.session.graph)
-        self.training_summary_writer = tf.summary.FileWriter(os.path.join(tensorboard_logdir, "training"), self.session.graph)
+        self.test_summary_writer = tf.compat.v1.summary.FileWriter(os.path.join(tensorboard_logdir, "test"), self.session.graph)
+        self.training_summary_writer = tf.compat.v1.summary.FileWriter(os.path.join(tensorboard_logdir, "training"), self.session.graph)
 
     def initialize_variables(self, save_file=None):
-        self.session.run(tf.global_variables_initializer())
+        self.session.run(tf.compat.v1.global_variables_initializer())
         if save_file is not None:
             self.saver.restore(self.session, save_file)
 
@@ -188,7 +188,7 @@ class StatisticsCollector(object):
         accuracy_summary = tf.summary.scalar("accuracy", accuracy)
         cost_summary = tf.summary.scalar("log_likelihood_cost", cost)
         # by jgku
-        accuracy_summaries = tf.compat.v1.summary.merge([accuracy_summary, cost_summary], name="accuracy_summaries")
+        # accuracy_summaries = tf.compat.v1.summary.merge([accuracy_summary, cost_summary], name="accuracy_summaries")
     session = tf.compat.v1.Session(graph=graph)
 
     def __init__(self):

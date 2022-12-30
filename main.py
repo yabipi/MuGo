@@ -10,6 +10,8 @@ import argh
 import gtp as gtp_lib
 import tqdm
 
+import tensorflow as tf
+
 from policy import PolicyNetwork
 from strategies import RandomPlayer, PolicyNetworkBestMovePlayer, PolicyNetworkRandomMovePlayer, MCTS
 from load_data_sets import DataSet, parse_data_sets
@@ -106,4 +108,5 @@ parser = argparse.ArgumentParser()
 argh.add_commands(parser, [gtp, preprocess, train])
 
 if __name__ == '__main__':
+    tf.compat.v1.disable_eager_execution()
     argh.dispatch(parser)

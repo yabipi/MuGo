@@ -45,8 +45,9 @@ def find_sgf_files(*dataset_dirs):
             if os.path.isdir(f) == False: continue
             sgffiles = os.listdir(f)
             for sgf in sgffiles:
-                if os.path.isfile(sgf) and sgf.endswith(".sgf"):
-                    yield sgf
+                sgf_file = os.path.join(f, sgf)
+                if os.path.isfile(sgf_file) and sgf.endswith(".sgf"):
+                    yield sgf_file
 
 def get_positions_from_sgf(file):
     with open(file) as f:
