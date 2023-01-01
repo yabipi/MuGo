@@ -16,3 +16,8 @@ def test_map():
 
 def test_chain():
     itertools.chain(*map(lambda x: x ** 2, [1, 2, 3, 4, 5]))
+
+def test_max():
+    strs = 'hhhdadamdaaaaaaaaak8888'
+    max_item = max(strs, key=strs.count)
+    print(max_item)
