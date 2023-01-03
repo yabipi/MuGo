@@ -239,7 +239,7 @@ class Position():
         '''
         board: a numpy array
         n: an int representing moves played so far
-        komi: a float, representing points given to the second player.
+        komi: a float, representing points given to the second player. 贴目数
         caps: a (int, int) tuple of captures for B, W.
         lib_tracker: a LibertyTracker object
         ko: a Move
@@ -288,6 +288,9 @@ class Position():
         return annotated_board + details
 
     def is_move_suicidal(self, move):
+        '''
+        走子是否为自杀
+        '''
         potential_libs = set()
         for n in NEIGHBORS[move]:
             neighbor_group_id = self.lib_tracker.group_index[n]
