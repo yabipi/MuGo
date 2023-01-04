@@ -1,10 +1,16 @@
 ## 说明
 该项目是本人学习AI的练手项目，采用原来库中的TensorFlow 1.x升到2.x，相应的部分API做了改写。
 
-安装
-======
+## 安装
+
 > python3 -m pip install tensorflow-macos
 
+## 支持tensorflow 1.x
+
+```python
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+```
 Update
 ======
 

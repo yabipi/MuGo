@@ -34,7 +34,6 @@ def make_onehot(feature, planes):
     # A 1 is encoded as [1,0,0,0], not [0,1,0,0], so subtract 1 from offsets
     nonzero_elements = (capped != 0).ravel()
     nonzero_index_offsets = onehot_index_offsets[nonzero_elements] - 1
-    # ravel() 多维变一维
     onehot_features.ravel()[nonzero_index_offsets] = 1
     return onehot_features
 

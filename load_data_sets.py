@@ -5,12 +5,12 @@ import os
 import struct
 import sys
 
+from tqdm import tqdm
+
 from features import bulk_extract_features
 import go
 from sgf_wrapper import replay_sgf
 import utils
-
-from tqdm import tqdm
 
 # Number of data points to store in a chunk on disk
 CHUNK_SIZE = 4096
@@ -40,14 +40,9 @@ def find_sgf_files(*dataset_dirs):
     for dataset_dir in dataset_dirs:
         full_dir = os.path.join(os.getcwd(), dataset_dir)
         dataset_files = [os.path.join(full_dir, name) for name in os.listdir(full_dir)]
-
         for f in dataset_files:
-            if os.path.isdir(f) == False: continue
-            sgffiles = os.listdir(f)
-            for sgf in sgffiles:
-                sgf_file = os.path.join(f, sgf)
-                if os.path.isfile(sgf_file) and sgf.endswith(".sgf"):
-                    yield sgf_file
+            if os.path.isfile(f) and f.endswith(".sgf"):
+                yield f
 
 def get_positions_from_sgf(file):
     with open(file) as f:

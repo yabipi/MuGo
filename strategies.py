@@ -251,11 +251,11 @@ class MCTS(GtpInterface):
             del chosen_leaf.parent.children[chosen_leaf.move]
             return
         print("Investigating following position:\n%s" % (chosen_leaf.position,), file=sys.stderr)
+        # backup
         move_probs = self.policy_network.run(position)
         chosen_leaf.expand(move_probs)
         # evaluation
         value = self.estimate_value(root, chosen_leaf)
-        # backup
         print("value: %s" % value, file=sys.stderr)
         chosen_leaf.backup_value(value)
 
